@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Quality Dept App</title>
+<style>
+:root{--bg:#0F1923;--panel:#1A2535;--panel2:#151E2B;--line:#2A3F55;--head:#1E3A5F;--text:#E8EDF2;--muted:#8A9BB0;--accent:#4ECDC4;--danger:#E74C3C;--green:#1A936F;--red:#C84B31}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+button,input,select,textarea{font:inherit;color:var(--text)}
+.topnav{background:var(--panel);border-bottom:2px solid var(--accent);display:flex;align-items:center;overflow-x:auto;position:sticky;top:0;z-index:100}
+.brand{color:var(--accent);font-weight:800;font-size:13px;padding:0 14px;white-space:nowrap;border-right:1px solid var(--line);height:50px;display:flex;align-items:center;flex-shrink:0}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:14px 12px;cursor:pointer;font-size:12px;white-space:nowrap;flex-shrink:0}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.wrap{padding:16px;max-width:1400px;margin:0 auto}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.h2{font-size:20px;font-weight:800}
+.card{background:var(--panel);border-radius:12px;border:1px solid var(--line);overflow:hidden;margin-bottom:12px}
+.card-head{background:var(--head);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.h3{font-size:14px;font-weight:700;color:var(--accent)}
+.inp{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;color:var(--text)}
+.sel{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;color:var(--text)}
+.ta{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;color:var(--text);resize:vertical;min-height:90px}
+.btn{background:var(--accent);color:#0F1923;border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap}
+.btn.sec{background:var(--line);color:var(--muted)}
+.btn.red{background:var(--danger);color:#fff}
+.btn.ora{background:#E65100;color:#fff}
+.lbl{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.badge{display:inline-block;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;color:#fff}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;text-align:center}
+.kpi .v{font-size:36px;font-weight:800;line-height:1}
+.kpi .l{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:6px;letter-spacing:.07em}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;background:var(--head);white-space:nowrap}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--line)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;padding:16px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.shell-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px}
+.shell-card.cp{background:#1F1515}
+.ok{font-size:12px;color:var(--accent)}
+.empty{text-align:center;padding:60px;color:var(--muted)}
+.spinner{min-height:100vh;display:flex;align-items:center;justify-content:center;color:var(--accent);flex-direction:column;gap:12px}
+.spinner .s{font-size:40px}
+@media print{.topnav,.no-print{display:none!important}body{background:#fff;color:#000}.card{border:1px solid #ccc;background:#fff}.card-head{background:#eee}}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:32px 28px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.login-box .logo{text-align:center;color:var(--accent);font-weight:800;font-size:18px;margin-bottom:4px}
+.login-box .sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:24px}
+.login-box .lf{margin-bottom:14px}
+.login-box .err{color:var(--danger);font-size:12px;text-align:center;min-height:16px;margin-bottom:10px;font-weight:600}
+.logout-btn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:11px;white-space:nowrap;margin-right:12px;flex-shrink:0}
+.logout-btn:hover{border-color:var(--danger);color:var(--danger)}
+.user-chip{margin-left:auto;color:var(--accent);font-size:11px;font-weight:700;white-space:nowrap;padding:0 10px;flex-shrink:0}
+.tr-wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tr-label{display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;white-space:nowrap;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 8px;transition:all .15s}
+.tr-label.checked{background:#1A5276;border-color:#4ECDC4;color:#4ECDC4}
+.tr-label input{display:none}
+select option{background:#0F1923;color:#E8EDF2}
+</style>
+</head>
+<body>
+<div id="root"><div class="spinner"><div class="s">⏳</div><div>Caricamento dati...</div></div></div>
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxncsDVGaPgbpqMxmWW2xFSpq5kXiaDBXuDiL39exa7zRUkco201nRLdPbvDTUo0e77eA/exec';
+const USE_LOCAL_ONLY=false;
+const FORCE_REMOTE_WRITES=true;
+const KEYS={personale:'qa_p2',planning:'qa_pl2',storico:'qa_st2',assenze:'qa_as2',storicoShift:'qa_ss2',oneone: 'qa_11'};
+const TEAMS=['A','B','C','D'];
+const TEAM_TL={A:'VISMU',B:'OAZEZ',C:'FALOM',D:'MTDLA'};
+const TEAM_BG={A:'#1565C0',B:'#2E7D32',C:'#6A1B9A',D:'#E65100'};
+const ONEONE_ALLOWED={A:'vismu',B:'oazez',C:'falom',D:'mtdla'};
+const PROCESSI=['Layup','Infusion','Gluing','Riparazioni','Coat','Team Leader'];
+const PROC_LINEA=['QI Linea Shell 1-2','QI Linea Shell 3-4'];
+const TURNI=['1° Turno','2° Turno','3° Turno'];
+const MESI=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+const STATI=['In attesa','In corso','Completato','Bloccato'];
+const TRAININGS=['PLE','Termografia','Spazi confinati','Approver','Approver Termografia'];
+const ANNO=2026;
+const FESTIVI=[[1,1],[1,6],[4,5],[4,6],[4,25],[5,1],[6,2],[8,15],[11,1],[12,8],[12,25],[12,26]];
+
+
+// Assenze
+const AT=[
+  {code:'F', label:'Ferie',          color:'#1565C0'},
+  {code:'M', label:'Malattia',       color:'#C62828'},
+  {code:'UA',label:'Uscita Ant.',    color:'#F57F17'},
+  {code:'P', label:'Permesso',       color:'#558B2F'},
+  {code:'CP',label:'Congedo Par.',   color:'#00838F'},
+  {code:'PS',label:'Perm. Studio',  color:'#6A1B9A'},
+  {code:'AS',label:'Ass. Straord.', color:'#78909C'},
+  {code:'SC',label:'Sciopero',      color:'#4E342E'},
+  {code:'CL',label:'Cerch. Lav.',   color:'#C0392B'},
+  {code:'CG',label:'Cerch. God.',   color:'#1A5276'},
+  {code:'FG',label:'Fest. Goduta',  color:'#D35400'},
+  {code:'R', label:'Riposo',        color:'#37474F'},
+  {code:'STR',label:'Straordinario',color:'#FFB300'}
+];
+
+const USERS=[
+  {user:'shellv236',pass:'07062026',nome:'ShellV236',ruolo:'admin'},
+  {user:'vismu',pass:'teamA2026',nome:'VISMU — Team A',ruolo:'tl'},
+  {user:'oazez',pass:'171221',nome:'OAZEZ — Team B',ruolo:'tl'},
+  {user:'falom',pass:'teamC2026',nome:'FALOM — Team C',ruolo:'tl'},
+  {user:'mtdla',pass:'mtdla',nome:'MTDLA — Team D',ruolo:'tl'},
+  {user:'msalo',pass:'280116',   nome:'MSALO',          ruolo:'op'},
+  {user:'omiko',pass:'omiko',    nome:'OMIKO',           ruolo:'op'},
+  {user:'icgar',pass:'icgar',    nome:'ICGAR',           ruolo:'op'},
+  {user:'mcegr',pass:'mcegr',    nome:'MCEGR',           ruolo:'op'},
+  { user:'lofot', pass:'lofot5642', nome:'LOFOT', ruolo:'view' },
+  {user:'adzpp', pass:'adzpp9856', nome:'Andrea Zappalà', ruolo:'view'},
+  {user:'pisaa', pass:'pisaa5456', nome:'Pietro Saracino', ruolo:'view'}
+ 
+];
+
+let _authMem=null;
+function getAuthUser(){if(_authMem)return _authMem;try{const v=sessionStorage.getItem('qa_auth');if(v){_authMem=JSON.parse(v);return _authMem;}}catch{}return null;}
+function setAuthUser(u){_authMem=u;try{sessionStorage.setItem('qa_auth',JSON.stringify(u))}catch{}}
+function clearAuth(){_authMem=null;try{sessionStorage.removeItem('qa_auth')}catch{}}
+
+const S={
+  tab:'dashboard',personale:null,planning:null,storico:null,assenze:null,loading:true,
+  dashTeam:'B',dashMese:new Date().getMonth(),
+  persTeam:'A',persSaved:false,
+  planSaved:false,showReset:false,
+  assTeam:'B',assMese:new Date().getMonth(),
+  ft:'',fp:'',
+  fproc:'',fpala:'',
+  shiftNotes:{s1lw1:'',s1lw2:'',s1ww1:'',s1ww2:'',s2lw1:'',s2lw2:'',s2ww1:'',s2ww2:'',s3lw1:'',s3lw2:'',s3ww1:'',s3ww2:'',s4lw1:'',s4lw2:'',s4ww1:'',s4ww2:''},
+  shiftGen:'',shiftNc:'',shiftTlE:'',storicoShift:null,
+  oneOneTeam:'A',
+  oneOneMese:new Date().getMonth(),
+  oneOne:null
+};
+
+function mkShells(){return[{shell:1,tipo:'LW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:1,tipo:'WW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:2,tipo:'LW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:2,tipo:'WW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:3,tipo:'LW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:3,tipo:'WW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:4,tipo:'LW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},{shell:4,tipo:'WW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''}];}
+function mkPersonale(){return TEAMS.flatMap(t=>Array.from({length:15},(_,i)=>({id:`${t}-${i}`,team:t,nome:'',cognome:'',lwww:'—',processo:'',training:[]})));}
+function mkPlanning(){return{team:'A',turno:'1° Turno',shells:mkShells()};}
+
+function fetchT(url,opts,ms){return new Promise((resolve,reject)=>{const ctl=('AbortController'in window)?new AbortController():null;const t=setTimeout(()=>{if(ctl)ctl.abort();reject(new Error('timeout'));},ms||6000);fetch(url,Object.assign({},opts,ctl?{signal:ctl.signal}:{})).then(r=>{clearTimeout(t);resolve(r);}).catch(e=>{clearTimeout(t);reject(e);});});}
+
+async function apiGet(key){
+  if(USE_LOCAL_ONLY){try{return JSON.parse(localStorage.getItem('qa_backup_'+key)||'null')}catch{return null}}
+  try{const r=await fetchT(`${SCRIPT_URL}?action=get&key=${encodeURIComponent(key)}`,{method:'GET',redirect:'follow'},3000);const t=await r.text();const j=JSON.parse(t);return j&&j.value?JSON.parse(j.value):null;}catch{try{return JSON.parse(localStorage.getItem('qa_backup_'+key)||'null')}catch{return null}}
+}
+async function apiSet(key,val){
+  const payload=JSON.stringify(val);
+  try{localStorage.setItem('qa_backup_'+key,payload);}catch{}
+  if(USE_LOCAL_ONLY)return true;
+  try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'set',key:key,value:payload})});const txt=await r.text();try{const j=JSON.parse(txt);if(j&&j.ok===true)return true;}catch{}}catch{}
+  if(FORCE_REMOTE_WRITES){try{await fetch(`${SCRIPT_URL}?action=set&key=${encodeURIComponent(key)}&value=${encodeURIComponent(payload)}`,{method:'GET',redirect:'follow'});return true;}catch{}}
+  return false;
+}
+
+function getPeopleByTeam(t){return(S.personale||[]).filter(p=>p.team===t&&p.nome);}
+function getQI(team,proc,tipo){if(!proc||!S.personale)return'';if(proc==='Coat')return'Qrole';const list=proc==='Layup'?S.personale.filter(p=>p.team===team&&p.processo===proc&&p.lwww===tipo):S.personale.filter(p=>p.team===team&&p.processo===proc);return list.map(p=>`${p.nome} ${p.cognome}`.trim()).filter(Boolean).join(' / ')||'(nessun QI)';}
+function getQILinea(team,shell){if(!S.personale)return'';const proc=shell<=2?'QI Linea Shell 1-2':'QI Linea Shell 3-4';const p=S.personale.find(x=>x.team===team&&x.processo===proc&&x.nome);return p?`${p.nome} ${p.cognome}`.trim():'(da assegnare)';}
+function x(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function bdg(color,text){return`<span class="badge" style="background:${color}">${x(text)}</span>`;}
+
+function renderLogin(msg){
+  document.getElementById('root').innerHTML=`
+  <div class="login-wrap"><form class="login-box" id="loginForm" autocomplete="on">
+    <div class="logo">⚙️ QUALITY DEPT</div>
+    <div class="sub">Accedi per continuare</div>
+    <div style="text-align:center;color:#4ECDC4;font-size:10px;margin-bottom:18px">v2 · login</div>
+    <div class="lf"><div class="lbl">Utente</div><input class="inp" id="lu" autocomplete="username" autofocus></div>
+    <div class="lf"><div class="lbl">Password</div><input class="inp" id="lp" type="password" autocomplete="current-password"></div>
+    <div class="err" id="lerr">${msg?x(msg):''}</div>
+    <button class="btn" type="submit" style="width:100%">🔓 Entra</button>
+  </form></div>`;
+  document.getElementById('loginForm').onsubmit=(e)=>{
+    e.preventDefault();
+    const u=(document.getElementById('lu').value||'').trim().toLowerCase();
+    const p=document.getElementById('lp').value||'';
+    const found=USERS.find(z=>z.user===u&&z.pass===p);
+    if(found){setAuthUser({user:found.user,nome:found.nome,ruolo:found.ruolo});loadData();}
+    else{document.getElementById('lerr').textContent='Utente o password errati';document.getElementById('lp').value='';}
+  };
+}
+
+function render(){
+  const root=document.getElementById('root');
+  if(S.loading){
+    root.innerHTML='<div class="spinner"><div class="s">⏳</div><div>Caricamento dati...</div><div style="font-size:12px;color:#4ECDC4;margin-top:8px">(CLOUD)</div></div>';
+    return;
+  }
+
+  const auth=getAuthUser();
+  if(!auth){
+    renderLogin();
+    return;
+  }
+
+  const isView = auth.ruolo === 'view';
+  const TABS = isView
+    ? [['dashboard','📊 Dashboard'],['storico','📦 Storico'],['personale','👥 Personale']]
+    : [['dashboard','📊 Dashboard'],['planning','📋 Planning'],['personale','👥 Personale'],['assenze','📅 Assenze'],['oneone','🧭 1:1'],['shift','📝 Shift Report'],['storico','📦 Storico'],['storshift','📋 Storico Shift']];
+
+  root.innerHTML=`
+    <div class="topnav">
+      <div class="brand">⚙️ QUALITY DEPT <span style="font-size:10px;color:#8A9BB0;margin-left:8px">(CLOUD)</span></div>
+      ${TABS.map(([id,lbl])=>`<button class="tab-btn ${S.tab===id?'active':''}" data-tab="${id}">${lbl}</button>`).join('')}
+      <span class="user-chip">👤 ${x(auth.nome)}</span>
+      <button class="logout-btn no-print" id="logoutBtn">⎋ Esci</button>
+    </div>
+    <div class="wrap">${renderContent()}</div>
+  `;
+
+  document.querySelectorAll('[data-tab]').forEach(b=>{
+    b.onclick=()=>{
+      S.tab=b.dataset.tab;
+      render();
+      bindEvents();
+    };
+  });
+
+  const lo=document.getElementById('logoutBtn');
+  if(lo)lo.onclick=()=>{
+    if(confirm('Vuoi uscire?')){
+      clearAuth();
+      _dataLoaded=false;
+      render();
+    }
+  };
+
+  bindEvents();
+}
+
+function renderContent(){
+  if(S.tab==='dashboard')return renderDash();
+  if(S.tab==='planning')return renderPlan();
+  if(S.tab==='personale')return renderPers();
+  if(S.tab==='oneone') return renderOneOne();
+  if(S.tab==='assenze')return renderAss();
+  if(S.tab==='shift')return renderShift();
+  if(S.tab==='storshift')return renderStorShift();
+  return renderStor();
+}
+
+
+function renderDash(){
+  const t = S.dashTeam,
+        m = S.dashMese,
+        allCP = (S.planning?.shells || []).filter(s => s.cp),
+        uniqueShellsCP = Array.from(new Set(allCP.map(s => s.shell))).sort(),
+        cpList = uniqueShellsCP.length > 0
+          ? uniqueShellsCP.map(n => `Shell ${n}`).join(' · ')
+          : 'Nessuna',
+        people = getPeopleByTeam(t).length;
+
+  const TEAM_ROLES = {
+    A: { TL: 'Vinci Samuele', SB: 'Greco Michela' },
+    B: { TL: 'Zezza Omar', SB: 'Massafra Loris' },
+    C: { TL: 'Lomartire Fabio', SB: 'Incalza Gabriele' },
+    D: { TL: 'Di Salvatore Matteo', SB: 'Oliva Mirko' }
+  };
+
+  const role = TEAM_ROLES[t] || { TL: '—', SB: '—' };
+
+  const mk = `${t}-${m}`,
+        md = S.assenze?.[mk] || {};
+  const totAss = Object.values(md).reduce((a,p)=>
+    a + Object.values(p).filter(v=>v && v!=='R' && !String(v).startsWith('STR(')).length
+  ,0);
+
+  return `
+  <div class="row"><h2 class="h2">📊 Dashboard</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <select class="sel" id="dt" style="width:110px">${TEAMS.map(t2=>`<option value="${t2}" ${t2===t?'selected':''}>Team ${t2}</option>`).join('')}</select>
+      <select class="sel" id="dm" style="width:140px">${MESI.map((n,i)=>`<option value="${i}" ${i===m?'selected':''}>${n}</option>`).join('')}</select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="h3">TL / SB</span></div>
+    <div style="padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <div style="background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px">
+        <div class="lbl">Team Leader</div>
+        <div style="font-weight:800;color:var(--accent);font-size:14px">${x(role.TL)}</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px">
+        <div class="lbl">Sostituto</div>
+        <div style="font-weight:800;color:var(--accent);font-size:14px">${x(role.SB)}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    ${[
+      {v:people, l:'Personale Attivo', c:'#1565C0'},
+      {v:totAss, l:`Assenze ${MESI[m].slice(0,3)}`, c:'#C62828'},
+      {v:cpList, l:'Critical Path Shell', c:'#E65100'}
+    ].map(k => `
+      <div class="kpi">
+        <div class="v" style="color:${k.c}">${k.v}</div>
+        <div class="l">${k.l}</div>
+      </div>`).join('')}
+  </div>
+
+  <div class="card"><div class="card-head"><span class="h3">Assenze ${MESI[m]} — per tipo</span></div>
+    <div style="padding:16px;display:flex;gap:10px;flex-wrap:wrap">
+    ${AT.map(t2=>{
+      const raw = Object.values(md).reduce((a,p)=>{
+        return a + Object.values(p).reduce((sum,v)=>{
+          if(t2.code==='UA'){
+            // Somma le ore da UA(xxh)
+            if(v && v.startsWith('UA(') && v.endsWith('h)')){
+              const num = parseFloat(v.slice(3,-2).replace(',','.'));
+              return sum + (isNaN(num)?0:num);
+            }
+            return sum;
+          } else {
+            // Altri codici: semplice conteggio
+            return sum + (v===t2.code ? 1 : 0);
+          }
+        },0);
+      },0);
+
+      const display = (t2.code==='UA')
+        ? raw.toFixed(2)        // ore totali UA
+        : raw;                  // numero eventi per gli altri
+
+      return `<div style="text-align:center;min-width:52px">
+        <div style="background:${t2.color};border-radius:10px;padding:8px;margin-bottom:4px">
+          <div style="font-size:16px;font-weight:800;color:#fff">${display}</div>
+        </div>
+        <div style="font-size:9px;color:var(--muted);font-weight:700">[${t2.code}]</div>
+        <div style="font-size:9px;color:var(--muted)">${t2.label}${t2.code==='UA'?' (ore)':''}</div>
+      </div>`;
+    }).join('')}
+    </div></div>
+  <div class="card"><div class="card-head"><span class="h3">🎓 Training — Team ${t}</span></div>
+    <div style="padding:16px;display:flex;gap:12px;flex-wrap:wrap">
+    ${TRAININGS.map(tr=>{const cnt=getPeopleByTeam(t).filter(p=>(p.training||[]).includes(tr)).length;const tot=getPeopleByTeam(t).length;return`<div style="text-align:center;min-width:90px"><div style="background:#1A5276;border:2px solid #4ECDC4;border-radius:10px;padding:12px 8px;margin-bottom:6px"><div style="font-size:28px;font-weight:800;color:#4ECDC4">${cnt}</div><div style="font-size:10px;color:#8A9BB0;margin-top:2px">/ ${tot}</div></div><div style="font-size:11px;color:var(--muted);font-weight:600">${x(tr)}</div></div>`;}).join('')}
+    </div></div>
+  <div class="card"><div class="card-head"><span class="h3">Planning attuale — Team ${x(S.planning?.team)} | ${x(S.planning?.turno)}</span></div>
+    <div class="scroll"><table class="tbl"><thead><tr>${['Shell','Tipo','N Pala','CP','Processo 1','Processo 2'].map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>
+    ${(S.planning?.shells||[]).map((s,i)=>`<tr style="background:${s.cp?'#1F1515':i%2===0?'#151E2B':'#1A2535'}"><td>Shell ${s.shell}</td><td>${bdg(s.tipo==='LW'?'#1A936F':'#C84B31',s.tipo)}</td><td style="font-family:monospace;font-weight:600">${x(s.pala||'—')}</td><td style="color:${s.cp?'#E74C3C':'#555'}">${s.cp?'✓':'—'}</td><td>${x(s.proc1||'—')}</td><td>${x(s.proc2||'—')}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+}
+
+function renderPlan(){
+  const p=S.planning;
+  const shells=[1,2,3,4].map(sn=>({
+    shell:sn,
+    lw:p.shells.find(x=>x.shell===sn&&x.tipo==='LW')||{shell:sn,tipo:'LW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},
+    ww:p.shells.find(x=>x.shell===sn&&x.tipo==='WW')||{shell:sn,tipo:'WW',pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''},
+  }));
+  return`
+  <div class="row"><h2 class="h2">📋 Planning ${S.planSaved?'<span class="ok">✓ Salvato</span>':''}</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
+      ${S.showReset?'<button class="btn ora" id="plan-rst">↺ Reset</button>':''}
+      <button class="btn red" id="plan-arc">🗂 Archivia</button>
+      <button class="btn" id="plan-sav">💾 Salva</button>
+    </div></div>
+  <div class="card"><div class="card-head" style="background:${TEAM_BG[p.team]}"><span class="h3" style="color:#fff">Impostazioni Turno</span></div>
+    <div class="mgrid">
+      <div><div class="lbl">Team</div><select class="sel" id="pt">${TEAMS.map(t=>`<option value="${t}" ${t===p.team?'selected':''}>Team ${t} - ${TEAM_TL[t]}</option>`).join('')}</select></div>
+      <div><div class="lbl">Turno</div><select class="sel" id="ptu">${TURNI.map(t=>`<option ${t===p.turno?'selected':''}>${x(t)}</option>`).join('')}</select></div>
+      <div><div class="lbl">Team Leader</div><input class="inp" readonly value="${TEAM_TL[p.team]}" style="color:var(--accent);font-weight:700"></div>
+    </div></div>
+  ${shells.map(group=>{
+    const cp=p.shells.some(x=>x.shell===group.shell&&x.cp);
+    return`<div class="card" style="overflow:hidden">
+      <div class="card-head"><span class="h3">SHELL ${group.shell}</span><span style="margin-left:auto">${bdg(cp?'#E74C3C':'#555',cp?'CP ATTIVO':'non CP')}</span></div>
+      <div style="padding:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:8px">
+        <div><div class="lbl">Critical Path Shell ${group.shell}</div><button class="btn pcp-shell" data-shell="${group.shell}" style="width:100%;background:${cp?'#E74C3C':'#8A9BB0'};color:#fff">${cp?'✓ CP ATTIVO':'— non CP'}</button></div>
+        <div><div class="lbl">N° Pala</div><input class="inp pf shared-pala" data-shell="${group.shell}" data-f="pala" value="${x(group.lw.pala||group.ww.pala)}" placeholder="—"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0">
+        <div class="shell-card" style="border-left:4px solid #1A936F;border-radius:0">
+          <div style="margin-bottom:8px">${bdg('#1A936F','🟢 LW')}</div>
+          <div class="sgrid" style="margin-bottom:8px">
+            <div><div class="lbl">Processo 1</div><select class="sel pf" data-shell="${group.shell}" data-tipo="LW" data-f="proc1"><option value=""></option>${PROCESSI.map(pr=>`<option ${pr===group.lw.proc1?'selected':''}>${x(pr)}</option>`).join('')}</select></div>
+            <div><div class="lbl">QI Proc 1</div><div style="color:var(--accent);font-size:12px;font-style:italic;padding:9px 0">${x(getQI(p.team,group.lw.proc1,'LW'))||'—'}</div></div>
+            <div><div class="lbl">Processo 2</div><select class="sel pf" data-shell="${group.shell}" data-tipo="LW" data-f="proc2"><option value=""></option>${PROCESSI.map(pr=>`<option ${pr===group.lw.proc2?'selected':''}>${x(pr)}</option>`).join('')}</select></div>
+            <div><div class="lbl">QI Proc 2</div><div style="color:var(--accent);font-size:12px;font-style:italic;padding:9px 0">${x(group.lw.proc2?getQI(p.team,group.lw.proc2,'LW'):'—')}</div></div>
+          </div>
+          <div class="sgrid">
+            <div><div class="lbl">QI di Linea</div><div style="color:var(--accent);font-size:12px;font-style:italic;padding:9px 0">${x(getQILinea(p.team,group.shell))}</div></div>
+            <div><div class="lbl">Note</div><input class="inp pf" data-shell="${group.shell}" data-tipo="LW" data-f="note" value="${x(group.lw.note)}" placeholder="..."></div>
+          </div>
+        </div>
+        <div class="shell-card" style="border-left:4px solid #C84B31;border-radius:0">
+          <div style="margin-bottom:8px">${bdg('#C84B31','🔴 WW')}</div>
+          <div class="sgrid" style="margin-bottom:8px">
+            <div><div class="lbl">Processo 1</div><select class="sel pf" data-shell="${group.shell}" data-tipo="WW" data-f="proc1"><option value=""></option>${PROCESSI.map(pr=>`<option ${pr===group.ww.proc1?'selected':''}>${x(pr)}</option>`).join('')}</select></div>
+            <div><div class="lbl">QI Proc 1</div><div style="color:var(--accent);font-size:12px;font-style:italic;padding:9px 0">${x(getQI(p.team,group.ww.proc1,'WW'))||'—'}</div></div>
+            <div><div class="lbl">Processo 2</div><select class="sel pf" data-shell="${group.shell}" data-tipo="WW" data-f="proc2"><option value=""></option>${PROCESSI.map(pr=>`<option ${pr===group.ww.proc2?'selected':''}>${x(pr)}</option>`).join('')}</select></div>
+            <div><div class="lbl">QI Proc 2</div><div style="color:var(--accent);font-size:12px;font-style:italic;padding:9px 0">${x(group.ww.proc2?getQI(p.team,group.ww.proc2,'WW'):'—')}</div></div>
+          </div>
+          <div class="sgrid">
+            <div><div class="lbl">QI di Linea</div><div style="color:var(--accent);font-size:12px;font-style:italic;padding:9px 0">${x(getQILinea(p.team,group.shell))}</div></div>
+            <div><div class="lbl">Note</div><input class="inp pf" data-shell="${group.shell}" data-tipo="WW" data-f="note" value="${x(group.ww.note)}" placeholder="..."></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+function renderPers(){
+  const auth=getAuthUser();
+  if(auth&&auth.ruolo==='op')return`<div class="empty"><div style="font-size:48px;margin-bottom:12px">🔒</div><div style="font-size:16px;font-weight:700">Accesso non consentito</div><div style="font-size:13px;color:var(--muted);margin-top:8px">Solo admin e team leader possono modificare il personale</div></div>`;
+  const team=S.persTeam,tp=S.personale.filter(p=>p.team===team),procOpts=[...PROCESSI,...PROC_LINEA];
+  return`
+  <div class="row"><h2 class="h2">👥 Personale ${S.persSaved?'<span class="ok">✓ Salvato</span>':''}</h2>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${TEAMS.map(t=>`<button class="btn ${team===t?'':'sec'}" data-pt="${t}" style="${team===t?'background:'+TEAM_BG[t]+';color:#fff':''}">Team ${t}</button>`).join('')}
+      <button class="btn" id="persSave">💾 Salva</button>
+    </div></div>
+  <div class="card"><div class="card-head" style="background:${TEAM_BG[team]}">
+    <span class="h3" style="color:#fff">Team ${team} — ${TEAM_TL[team]}</span>
+    <span style="margin-left:auto;font-size:12px;color:rgba(255,255,255,.7)">${tp.filter(p=>p.nome).length}/${tp.length} slot</span>
+  </div>
+  <div class="scroll"><table class="tbl"><thead><tr>
+    ${['#','Nome','Cognome','LW/WW','Processo','Training'].map(h=>`<th>${h}</th>`).join('')}
+  </tr></thead><tbody>
+  ${tp.map((p,i)=>`<tr style="background:${i>=12?'#1A2020':i%2===0?'#151E2B':'#1A2535'}">
+    <td style="color:var(--muted);font-size:11px;font-weight:700">${i>=12?'B'+(i-11):i+1}</td>
+    <td><input class="inp perf" data-id="${p.id}" data-f="nome" value="${x(p.nome)}" placeholder="Nome..."></td>
+    <td><input class="inp perf" data-id="${p.id}" data-f="cognome" value="${x(p.cognome)}" placeholder="Cognome..."></td>
+    <td><select class="sel perf" data-id="${p.id}" data-f="lwww">${['-','LW','WW'].map(v=>`<option ${v===p.lwww?'selected':''}>${v}</option>`).join('')}</select></td>
+    <td><select class="sel perf" data-id="${p.id}" data-f="processo"><option value="">—</option>${procOpts.map(v=>`<option ${v===p.processo?'selected':''}>${x(v)}</option>`).join('')}</select></td>
+    <td>
+      <div class="tr-wrap">
+        ${TRAININGS.map(tr=>{const checked=(p.training||[]).includes(tr);return`<label class="tr-label ${checked?'checked':''}" title="${x(tr)}"><input type="checkbox" class="tr-chk" data-id="${p.id}" data-tr="${x(tr)}" ${checked?'checked':''}>${x(tr)}</label>`;}).join('')}
+      </div>
+    </td>
+  </tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function renderAss(){
+  const auth = getAuthUser();
+  if (auth && auth.ruolo === 'op') return `
+    <div class="empty">
+      <div style="font-size:48px;margin-bottom:12px">🔒</div>
+      <div style="font-size:16px;font-weight:700">Accesso non consentito</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px">
+        Solo admin e team leader possono gestire le assenze
+      </div>
+    </div>`;
+
+  const team  = S.assTeam,
+        mese  = S.assMese,
+        people = getPeopleByTeam(team),
+        days  = new Date(ANNO, mese + 1, 0).getDate();
+
+  const mk = `${team}-${mese}`,
+        md = S.assenze?.[mk] || {};
+
+  const dow    = d => new Date(ANNO, mese, d).getDay();
+  const isWE   = d => [0,6].includes(dow(d));
+  const isFest = d => FESTIVI.some(([m,day]) => m === mese + 1 && day === d);
+  const DL     = ['D','L','M','M','G','V','S'];
+
+  // Conteggio per persona (per riga)
+  const counts = pid => {
+    const row = md[pid] || {};
+    const c = { TOT: 0 };
+    AT.forEach(t => c[t.code] = 0);
+
+    Object.entries(row).forEach(([k,v]) => {
+      if (!v) return;
+
+      // slot extra di straordinario (da CL)
+      if (k.endsWith('_str')) {
+        if (v.startsWith('STR(') && v.endsWith('h)')) {
+          const num = parseFloat(v.slice(4,-2).replace(',','.'));
+          const ore = isNaN(num) ? 0 : num;
+          c.STR += ore;
+        }
+        return;
+      }
+
+      if (v === 'R') return;
+
+      // UA(xxh)
+      if (v.startsWith('UA(') && v.endsWith('h)')) {
+        const num = parseFloat(v.slice(3,-2).replace(',','.'));
+        const ore = isNaN(num) ? 0 : num;
+        c.UA  += ore;
+        c.TOT += ore;
+        return;
+      }
+
+      // STR(xxh) non pesa come assenza
+      if (v.startsWith('STR(') && v.endsWith('h)')) {
+        const num = parseFloat(v.slice(4,-2).replace(',','.'));
+        const ore = isNaN(num) ? 0 : num;
+        c.STR += ore;
+        return;
+      }
+
+      const t = AT.find(t => t.code === v);
+      if (t) {
+        c[t.code]++;
+        c.TOT++;
+      }
+    });
+
+    return c;
+  };
+
+  const dayBg    = d => isFest(d) ? '#E65100' : isWE(d) ? '#7B1FA2' : '#1E3A5F';
+  const dayColor = d => (isFest(d) || isWE(d)) ? '#FFD700' : 'var(--muted)';
+
+  // Totale assenze per persona nel mese (per grafico)
+  const perPersona = (people || []).map(p => {
+    const pid = p.id;
+    const row = md[pid] || {};
+    let tot = 0;
+
+    Object.values(row).forEach(v => {
+      if (!v) return;
+      if (v.startsWith('UA(') && v.endsWith('h)')) {
+        const num = parseFloat(v.slice(3,-2).replace(',','.'));
+        tot += isNaN(num) ? 0 : num;
+      } else if (!v.startsWith('R') && !v.startsWith('STR(')) {
+        // tutti gli altri codici contano 1 evento (esclude Riposo e STR)
+        tot += 1;
+      }
+    });
+
+    return {
+      id: pid,
+      nome: `${p.nome} ${p.cognome}`.trim(),
+      value: tot
+    };
+  })
+  .filter(r => r.value > 0)
+  .sort((a,b) => b.value - a.value);
+
+  const maxPersona = perPersona.length
+    ? Math.max(...perPersona.map(r => r.value))
+    : 1;
+
+  return `
+  <div class="row"><h2 class="h2">📅 Registro Assenze</h2>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${TEAMS.map(t => `
+        <button class="btn ${team===t?'':'sec'} ass-tb"
+                data-at="${t}"
+                style="${team===t?'background:'+TEAM_BG[t]+';color:#fff':''}">
+          Team ${t}
+        </button>`).join('')}
+      <select class="sel" id="am" style="width:140px">
+        ${MESI.map((n,i) => `
+          <option value="${i}" ${i===mese?'selected':''}>${n} ${ANNO}</option>
+        `).join('')}
+      </select>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
+    ${AT.map(t => `
+      <span style="background:${t.color};color:#fff;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700">
+        [${t.code}] ${t.label}
+      </span>`).join('')}
+    <span style="background:#7B1FA2;color:#FFD700;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700">🟣 Weekend</span>
+    <span style="background:#E65100;color:#FFD700;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700">🟠 Festivo</span>
+  </div>
+
+  <!-- Grafico assenze per persona -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-head">
+      <span class="h3">Assenze ${MESI[mese]} — per persona</span>
+    </div>
+    <div style="padding:12px 16px">
+      ${
+        perPersona.length === 0
+          ? `
+        <div style="font-size:12px;color:var(--muted);text-align:center;padding:20px">
+          Nessuna assenza registrata per il team nel mese selezionato.
+        </div>`
+          : perPersona.map(r => `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px">
+          <div style="width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:600">
+            ${r.nome || r.id}
+          </div>
+          <div style="flex:1;background:#1A2535;border-radius:999px;overflow:hidden;height:12px">
+            <div style="
+              height:100%;
+              width:${(r.value / maxPersona) * 100}%;
+              background:#E65100;
+              transition:width .2s;
+            "></div>
+          </div>
+          <div style="width:40px;text-align:left;font-weight:700;color:#E8EDF2;font-size:11px">
+            ${r.value.toFixed(2)}
+          </div>
+        </div>`).join('')
+      }
+      <div style="margin-top:4px;font-size:10px;color:var(--muted)">
+        UA in ore, gli altri codici contano come 1 evento di assenza
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <table class="tbl" style="font-size:11px;min-width:600px">
+      <thead>
+        <tr>
+          <th style="min-width:120px;position:sticky;left:0;z-index:2;background:var(--head)">NOME</th>
+          ${
+            Array.from({length:days},(_,i)=>i+1).map(d => `
+              <th style="background:${dayBg(d)};width:26px;text-align:center;padding:4px 1px;color:${dayColor(d)}">
+                <div>${d}</div>
+                <div style="font-size:8px">${DL[dow(d)]}</div>
+              </th>`).join('')
+          }
+          ${
+            AT.map(t => `
+              <th style="background:${t.color};color:#fff;width:26px;text-align:center;padding:4px 1px;font-size:9px">
+                ${t.code}
+              </th>`).join('')
+          }
+          <th style="background:var(--head);color:var(--accent);width:32px;text-align:center;padding:4px 1px;font-size:9px">TOT</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${
+          people.map((per,ri) => {
+            const pid = per.id;
+            const c   = counts(pid);
+            return `
+            <tr style="background:${ri%2===0?'#151E2B':'#1A2535'}">
+              <td style="font-weight:600;white-space:nowrap;position:sticky;left:0;z-index:1;background:${ri%2===0?'#151E2B':'#1A2535'}">
+                ${x(per.nome)} ${x(per.cognome)}
+              </td>
+              ${
+                Array.from({length:days},(_,i)=>i+1).map(d => {
+                  const v  = md[pid]?.[d] || '';
+                  const tc = AT.find(t => v && v.startsWith(t.code))?.color;
+                  const cellBg = isFest(d) ? '#1F1500' : isWE(d) ? '#1A0F1F' : 'transparent';
+                  return `
+                  <td style="padding:1px;background:${cellBg}">
+                    <select class="assf" data-pid="${pid}" data-d="${d}"
+                            style="background:${tc||'#0F1923'};color:#E8EDF2;border:1px solid #2A3F55;border-radius:3px;padding:1px;font-size:9px;width:24px;text-align:center;cursor:pointer;font-family:inherit">
+                      <option value=""></option>
+                      ${AT.map(t => `
+                        <option value="${t.code}" ${v && v.startsWith(t.code)?'selected':''}>${t.code}</option>`).join('')}
+                    </select>
+                  </td>`;
+                }).join('')
+              }
+              ${
+                AT.map(t => `
+                  <td style="text-align:center;padding:4px 1px;background:${t.color}22;font-weight:700;color:${c[t.code]>0?'#fff':'#444'};font-size:11px">
+                    ${
+                      t.code==='UA' || t.code==='STR'
+                        ? (c[t.code] || 0).toFixed(2)
+                        : (c[t.code] || 0)
+                    }
+                  </td>`).join('')
+              }
+              <td style="text-align:center;padding:4px 2px;font-weight:800;font-size:12px;color:${c.TOT>3?'#E74C3C':'var(--accent)'}">
+                ${c.TOT.toFixed ? c.TOT.toFixed(2) : c.TOT}
+              </td>
+            </tr>`;
+          }).join('')
+        }
+      </tbody>
+    </table>
+  </div>`;
+}
+function renderOneOne(){
+  const auth=getAuthUser();
+  const authUser=String(auth?.user||'').toLowerCase();
+  const allowedUsers=['vismu','oazez','falom','mtdla'];
+
+  if(auth && !allowedUsers.includes(authUser)){
+    return `<div class="empty"><div style="font-size:40px;margin-bottom:12px">🔒</div><div>Accesso non consentito</div></div>`;
+  }
+
+  const teamByUser = { vismu:'A', oazez:'B', falom:'C', mtdla:'D' };
+  const team = teamByUser[authUser] || 'A';
+  const mese = S.oneOneMese ?? new Date().getMonth();
+  const TL_NAMES = {
+  A: 'samuele vinci',
+  B: 'omar zezza',
+  C: 'fabio lomartire',
+  D: 'matteo di salvatore'
+};
+
+const people = getPeopleByTeam(team).filter(p => {
+  const full = `${p.nome||''} ${p.cognome||''}`.trim().toLowerCase();
+  return full !== TL_NAMES[team];
+});
+  const saved = S.oneOne || {};
+  const key = `${team}-${mese}`;
+
+  const rows = people.map(p=>{
+    const row=(saved[key]&&saved[key][p.id])||{};
+    return {
+      p,
+      day:row.day||'',
+      done:!!row.done,
+      dati:row.dati||'',
+      ricevuti:row.ricevuti||''
+    };
+  });
+
+  return `
+  <div class="row">
+    <h2 class="h2">🧭 1:1</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <select class="sel" id="o1m" style="width:140px">${MESI.map((n,i)=>`<option value="${i}" ${i===mese?'selected':''}>${n}</option>`).join('')}</select>
+      <button class="btn" id="o1save">💾 Salva</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="h3">1:1 Team ${team} — ${MESI[mese]}</span></div>
+    <div class="scroll">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Giorno</th>
+            <th>Fatto</th>
+            <th>Feedback dati</th>
+            <th>Feedback ricevuti</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r=>`
+            <tr>
+              <td>${x(r.p.nome)} ${x(r.p.cognome||'')}</td>
+              <td><input class="inp o1-day" data-id="${r.p.id}" value="${x(r.day)}" placeholder="1-31" style="width:70px"></td>
+              <td>
+                <select class="sel o1-done" data-id="${r.p.id}" style="width:110px">
+                  <option value="" ${!r.done?'selected':''}>Da fare</option>
+                  <option value="1" ${r.done?'selected':''}>Fatto</option>
+                </select>
+              </td>
+              <td><textarea class="ta o1-dati" data-id="${r.p.id}" style="min-height:70px;resize:vertical" placeholder="Testo libero">${x(r.dati)}</textarea></td>
+              <td><textarea class="ta o1-ricevuti" data-id="${r.p.id}" style="min-height:70px;resize:vertical" placeholder="Testo libero">${x(r.ricevuti)}</textarea></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function renderShift(){
+  const n = S.shiftNotes,
+        team = S.planning?.team || 'A',
+        turno = S.planning?.turno || '';
+
+  const getPala = sn => (S.planning?.shells || []).find(s => s.shell === sn && s.tipo === 'LW')?.pala || '';
+
+  const doSaveShift = async () => {
+    const record = {
+      team,
+      turno,
+      tlEntrante: S.shiftTlE,
+      gen: S.shiftGen,
+      nc: S.shiftNc,
+      shiftNotes: S.shiftNotes
+    };
+    await apiSet('shiftDraft', record);
+    return true;
+  };
+
+  if (!window.shiftAutosaveTimer) {
+    window.shiftAutosaveTimer = setInterval(async () => {
+      if (S.tab !== 'shift') return;
+      await doSaveShift();
+    }, 5 * 60 * 1000);
+  }
+
+  return `
+  <div class="row"><h2 class="h2">📝 Shift Report</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
+      <button class="btn" id="shiftSave">💾 Salva</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" style="background:${TEAM_BG[team]}">
+      <span class="h3" style="color:#fff;font-size:15px">TEAM ${team} | ${x(turno)}</span>
+      <span style="margin-left:auto;color:#fff;font-size:11px">${new Date().toLocaleDateString('it-IT')}</span>
+    </div>
+
+    <div class="mgrid">
+      <div><div class="lbl">Team</div><input class="inp" readonly value="Team ${team}"></div>
+      <div><div class="lbl">Turno</div><input class="inp" readonly value="${x(turno)}"></div>
+      <div><div class="lbl">Team Leader</div><input class="inp" readonly value="${TEAM_TL[team]}" style="color:var(--accent);font-weight:700"></div>
+      <div><div class="lbl">TL Entrante</div><input class="inp" id="stle" value="${x(S.shiftTlE)}" placeholder="Nome TL entrante..."></div>
+    </div>
+  </div>
+
+  ${[1,2,3,4].map(sn => {
+    const pala = getPala(sn), qiL = getQILinea(team, sn);
+    return `
+    <div class="card">
+      <div class="card-head">
+        <span class="h3">SHELL ${sn}${pala ? ' | Pala N° ' + x(pala) : ''}</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted)">QI Linea: ${x(qiL)}</span>
+      </div>
+      <div style="padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div style="margin-bottom:6px">${bdg('#1A936F','🟢 LW')}</div>
+          <textarea class="ta snote" data-k="s${sn}lw1" style="border:1px solid #1A936F;margin-bottom:8px" placeholder="Note operative LW...">${x(n['s'+sn+'lw1'])}</textarea>
+          <textarea class="ta snote" data-k="s${sn}lw2" style="border:1px solid #1A936F" placeholder="Da fare turno successivo LW...">${x(n['s'+sn+'lw2'])}</textarea>
+        </div>
+        <div>
+          <div style="margin-bottom:6px">${bdg('#C84B31','🔴 WW')}</div>
+          <textarea class="ta snote" data-k="s${sn}ww1" style="border:1px solid #C84B31;margin-bottom:8px" placeholder="Note operative WW...">${x(n['s'+sn+'ww1'])}</textarea>
+          <textarea class="ta snote" data-k="s${sn}ww2" style="border:1px solid #C84B31" placeholder="Da fare turno successivo WW...">${x(n['s'+sn+'ww2'])}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}
+
+  <div class="split">
+    <div class="card">
+      <div class="card-head"><span class="h3">Note Generali Turno</span></div>
+      <div style="padding:12px"><textarea id="sgen" class="ta">${x(S.shiftGen)}</textarea></div>
+    </div>
+
+    <div class="card" style="border-color:#E74C3C">
+      <div class="card-head" style="background:#1F1515">
+        <span class="h3" style="color:#E74C3C">⚠ Problemi / NC</span>
+      </div>
+      <div style="padding:12px"><textarea id="snc" class="ta" style="border:1px solid #E74C3C">${x(S.shiftNc)}</textarea></div>
+    </div>
+  </div>`;
+}
+
+function renderStorShift(){
+  const rows = (S.storicoShift || []).map((r,i)=>({r,i})).reverse();
+
+  return `
+  <div class="row"><h2 class="h2">📋 Storico Shift Report (${rows.length})</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
+      <button class="btn red" id="sshclr">🗑 Cancella tutto</button>
+    </div>
+  </div>
+
+  ${rows.length===0
+    ? '<div class="empty"><div style="font-size:40px;margin-bottom:12px">📭</div><div>Nessun shift inviato</div></div>'
+    : rows.map(item=>`
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-head" style="background:${TEAM_BG[item.r.team]||'#1E3A5F'}">
+      <span style="font-weight:800;color:#fff;font-size:14px">TEAM ${x(item.r.team)} | ${x(item.r.turno)}</span>
+      <span style="margin-left:auto;color:rgba(255,255,255,.8);font-size:11px">${x(item.r.data)}</span>
+      <button class="btn red del-shift-row" data-idx="${item.i}" style="padding:4px 8px;font-size:11px;margin-left:8px">
+        Cancella
+      </button>
+    </div>
+    <div style="padding:14px">
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:12px">
+        <span><span style="color:var(--muted)">TL Entrante:</span> <strong>${x(item.r.tlEntrante||'—')}</strong></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-bottom:10px">
+        ${[1,2,3,4].map(sn=>`
+        <div style="background:var(--panel2);border-radius:8px;padding:10px;border:1px solid var(--line)">
+          <div style="font-weight:700;color:var(--accent);margin-bottom:6px;font-size:12px">SHELL ${sn}</div>
+          <div style="font-size:11px;margin-bottom:4px">${bdg('#1A936F','LW')} <span style="color:var(--muted)">${x(item.r['s'+sn+'lw1']||'—')}</span></div>
+          <div style="font-size:11px;margin-bottom:6px;padding-left:32px;color:#E65100">↳ ${x(item.r['s'+sn+'lw2']||'—')}</div>
+          <div style="font-size:11px;margin-bottom:4px">${bdg('#C84B31','WW')} <span style="color:var(--muted)">${x(item.r['s'+sn+'ww1']||'—')}</span></div>
+          <div style="font-size:11px;padding-left:32px;color:#E65100">↳ ${x(item.r['s'+sn+'ww2']||'—')}</div>
+        </div>`).join('')}
+      </div>
+      ${item.r.gen ? `<div style="font-size:12px;padding:8px;background:var(--panel2);border-radius:6px;margin-bottom:6px"><span style="color:var(--muted);font-weight:600">NOTE GENERALI:</span> ${x(item.r.gen)}</div>` : ''}
+      ${item.r.nc ? `<div style="font-size:12px;padding:8px;background:#1F1515;border-radius:6px;border:1px solid #E74C3C"><span style="color:#E74C3C;font-weight:600">⚠ NC:</span> ${x(item.r.nc)}</div>` : ''}
+    </div>
+  </div>`).join('')}
+  `;
+}
+
+function renderStor(){
+  const rows=(S.storico||[]).slice().reverse().filter(r =>
+    (!S.ft || r.team===S.ft) &&
+    (!S.fproc || `${r.proc1} ${r.proc2}`.toLowerCase().includes(S.fproc.toLowerCase())) &&
+    (!S.fpala || String(r.pala||'').toLowerCase().includes(S.fpala.toLowerCase()))
+  );
+
+  return `
+  <div class="row"><h2 class="h2">📦 Storico (${rows.length} record)</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
+      <select class="sel" id="sft" style="width:120px">
+        <option value="">Tutti i Team</option>
+        ${TEAMS.map(t=>`<option value="${t}" ${S.ft===t?'selected':''}>Team ${t}</option>`).join('')}
+      </select>
+
+      <input class="inp" id="sproc" style="width:170px" value="${x(S.fproc||'')}" placeholder="Filtra processo...">
+
+      <input class="inp" id="spala" style="width:110px" value="${x(S.fpala||'')}" placeholder="N° pala...">
+
+      <button class="btn red" id="stclr">🗑️ Cancella tutto</button>
+    </div>
+  </div>
+
+  ${rows.length===0 ? '<div class="empty"><div style="font-size:40px;margin-bottom:12px">📭</div><div>Nessun record</div></div>' : `
+  <div class="card">
+    <div class="scroll">
+      <table class="tbl" style="font-size:12px">
+        <thead><tr>
+          <th>Data</th><th>Team</th><th>Shell</th><th>Tipo</th><th>Turno</th><th>CP</th>
+         <th>Proc 1</th><th>QI 1</th><th>Proc 2</th><th>QI 2</th><th>QI Linea</th><th>N Pala</th><th>Note</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${rows.map((r,i)=>{
+            const oi=(S.storico||[]).length-1-i;
+            return `
+            <tr style="background:${i%2===0?'#151E2B':'#1A2535'}">
+              <td style="white-space:nowrap;font-family:monospace;font-size:11px">${x(r.data)}</td>
+              <td>${bdg(TEAM_BG[r.team]||'#555',r.team)}</td>
+              <td style="white-space:nowrap">${x(r.shell)}</td>
+              <td>${bdg(r.tipo==='LW'?'#1A936F':'#C84B31',r.tipo)}</td>
+              <td style="font-size:11px;white-space:nowrap">${x(r.turno)}</td>
+              <td style="color:${r.cp==='✓'?'#E74C3C':'#555'}">${x(r.cp)}</td>
+              <td>${x(r.proc1||'')}</td>
+              <td style="color:var(--accent);font-size:11px">${x(r.qi1||'')}</td>
+              <td>${x(r.proc2||'')}</td>
+              <td style="color:var(--accent);font-size:11px">${x(r.qi2||'')}</td>
+              <td style="color:var(--accent);font-size:11px">${x(r.qiLinea||'')}</td>
+              <td style="font-family:monospace">${x(r.pala||'')}</td>
+              <td style="max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x(r.note||'')}</td>
+              <td><button class="btn red del-row" data-idx="${oi}" style="padding:4px 8px;font-size:11px">Cancella</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`}
+  `;
+}
+
+function bindEvents(){
+  if(S.tab==='dashboard'){
+    const dt=document.getElementById('dt');if(dt)dt.onchange=e=>{S.dashTeam=e.target.value;render();};
+    const dm=document.getElementById('dm');if(dm)dm.onchange=e=>{S.dashMese=+e.target.value;render();};
+  }
+
+  if(S.tab==='planning'){
+    const pt=document.getElementById('pt');if(pt)pt.onchange=e=>{S.planning.team=e.target.value;render();};
+    const ptu=document.getElementById('ptu');if(ptu)ptu.onchange=e=>{S.planning.turno=e.target.value;};
+
+    document.querySelectorAll('.pf').forEach(el=>el.onchange=async e=>{
+      const sh=+e.target.dataset.shell,f=e.target.dataset.f,tp=e.target.dataset.tipo;
+      if(el.classList.contains('shared-pala')){
+        S.planning.shells.forEach(r=>{if(r.shell===sh)r.pala=e.target.value;});
+        render();
+        return;
+      }
+      const row=S.planning.shells.find(r=>r.shell===sh&&r.tipo===tp);
+      if(row)row[f]=e.target.value;
+      if(f==='proc1'||f==='proc2'||f==='stato')render();
+    });
+
+    document.querySelectorAll('.pcp-shell').forEach(b=>b.onclick=()=>{
+      const sh=+b.dataset.shell,next=!S.planning.shells.some(r=>r.shell===sh&&r.cp);
+      S.planning.shells.forEach(r=>{if(r.shell===sh)r.cp=next;});
+      render();
+    });
+
+    const ps=document.getElementById('plan-sav');
+    if(ps)ps.onclick=async()=>{
+      ps.textContent='⏳ Salvo...';
+      ps.disabled=true;
+      await apiSet(KEYS.planning,S.planning);
+      setTimeout(()=>{S.planSaved=false;render();},1500);
+      S.planSaved=true;
+      render();
+    };
+
+    const pa=document.getElementById('plan-arc');
+    if(pa)pa.onclick=async()=>{
+      const filled=S.planning.shells.filter(s=>s.proc1);
+      if(!filled.length){alert('Compila almeno Processo 1!');return;}
+      const now=new Date(),rows=filled.map(s=>({
+        data:now.toLocaleDateString('it-IT')+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
+        team:S.planning.team,
+        shell:'Shell '+s.shell,
+        tipo:s.tipo,
+        turno:S.planning.turno,
+        cp:S.planning.shells.some(x=>x.shell===s.shell&&x.cp)?'✓':'—',
+        proc1:s.proc1,
+        qi1:getQI(S.planning.team,s.proc1,s.tipo),
+        proc2:s.proc2||'',
+        qi2:s.proc2?getQI(S.planning.team,s.proc2,s.tipo):'',
+        qiLinea:getQILinea(S.planning.team,s.shell),
+        stato:s.stato,
+        pala:s.pala,
+        note:s.note
+      }));
+      S.storico=[...(S.storico||[]),...rows];
+      pa.textContent='⏳ Archivio...';
+      pa.disabled=true;
+      await apiSet(KEYS.storico,S.storico);
+      alert(`✅ ${rows.length} righe archiviate!`);
+      S.showReset=true;
+      render();
+    };
+
+    const pr=document.getElementById('plan-rst');
+    if(pr)pr.onclick=async()=>{
+      S.planning.shells=S.planning.shells.map(s=>({...s,pala:'',cp:false,proc1:'',proc2:'',stato:'In attesa',note:''}));
+      await apiSet(KEYS.planning,S.planning);
+      S.showReset=false;
+      render();
+    };
+  }
+
+if(S.tab==='personale'){
+  const auth=getAuthUser();
+  if(auth&&auth.ruolo==='op')return;
+
+  document.querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>{
+    S.persTeam=b.dataset.pt;
+    render();
+    bindEvents();
+  });
+
+  const canEdit = !(auth && auth.ruolo==='view');
+  if(!canEdit) return;
+
+  document.querySelectorAll('.perf').forEach(el=>el.onchange=e=>{
+    const id=e.target.dataset.id,f=e.target.dataset.f;
+    const p=S.personale.find(z=>z.id===id);if(p)p[f]=e.target.value;
+    S.persSaved=false;
+  });
+
+  document.querySelectorAll('.tr-chk').forEach(cb=>{
+    cb.onchange=()=>{
+      const id=cb.dataset.id,tr=cb.dataset.tr;
+      const p=S.personale.find(z=>z.id===id);if(!p)return;
+      if(!p.training)p.training=[];
+      if(cb.checked){if(!p.training.includes(tr))p.training.push(tr);}
+      else{const i=p.training.indexOf(tr);if(i>-1)p.training.splice(i,1);}
+      const lbl=cb.closest('.tr-label');if(lbl)lbl.classList.toggle('checked',cb.checked);
+      S.persSaved=false;
+    };
+  });
+
+  const ps=document.getElementById('persSave');
+  if(ps)ps.onclick=async()=>{
+    await apiSet(KEYS.personale,S.personale);
+    S.persSaved=true;
+    render();
+    setTimeout(()=>{S.persSaved=false;render();},1200);
+  };
+}
+
+if(S.tab==='oneone'){
+  const auth=getAuthUser();
+  const authUser=String(auth?.user||'').toLowerCase();
+  const allowedUsers=['vismu','oazez','falom','mtdla'];
+
+  if(auth && !allowedUsers.includes(authUser)) return;
+
+  const teamByUser = { vismu:'A', oazez:'B', falom:'C', mtdla:'D' };
+  const team = teamByUser[authUser] || 'A';
+
+  const mese=document.getElementById('o1m');
+  if(mese)mese.onchange=e=>{
+    S.oneOneMese=+e.target.value;
+    render();
+    bindEvents();
+  };
+
+  document.querySelectorAll('.o1-day').forEach(el=>{
+    el.onchange=e=>{
+      const id=e.target.dataset.id;
+      const key=`${team}-${S.oneOneMese}`;
+      S.oneOne=S.oneOne||{};
+      S.oneOne[key]=S.oneOne[key]||{};
+      S.oneOne[key][id]=S.oneOne[key][id]||{};
+      S.oneOne[key][id].day=e.target.value;
+    };
+  });
+
+  document.querySelectorAll('.o1-done').forEach(el=>{
+    el.onchange=e=>{
+      const id=e.target.dataset.id;
+      const key=`${team}-${S.oneOneMese}`;
+      S.oneOne=S.oneOne||{};
+      S.oneOne[key]=S.oneOne[key]||{};
+      S.oneOne[key][id]=S.oneOne[key][id]||{};
+      S.oneOne[key][id].done=e.target.value==='1';
+    };
+  });
+
+  document.querySelectorAll('.o1-dati').forEach(el=>{
+    el.oninput=e=>{
+      const id=e.target.dataset.id;
+      const key=`${team}-${S.oneOneMese}`;
+      S.oneOne=S.oneOne||{};
+      S.oneOne[key]=S.oneOne[key]||{};
+      S.oneOne[key][id]=S.oneOne[key][id]||{};
+      S.oneOne[key][id].dati=e.target.value;
+    };
+  });
+
+  document.querySelectorAll('.o1-ricevuti').forEach(el=>{
+    el.oninput=e=>{
+      const id=e.target.dataset.id;
+      const key=`${team}-${S.oneOneMese}`;
+      S.oneOne=S.oneOne||{};
+      S.oneOne[key]=S.oneOne[key]||{};
+      S.oneOne[key][id]=S.oneOne[key][id]||{};
+      S.oneOne[key][id].ricevuti=e.target.value;
+    };
+  });
+
+  const save=document.getElementById('o1save');
+  if(save)save.onclick=async()=>{
+    await apiSet(KEYS.oneone,S.oneOne||{});
+    alert('1:1 salvato');
+  };
+}
+
+  if(S.tab==='assenze'){
+    const auth=getAuthUser();
+    if(auth && auth.ruolo==='op') return;
+
+    document.querySelectorAll('.ass-tb').forEach(b=>{
+      b.onclick=()=>{
+        S.assTeam=b.dataset.at;
+        render();
+        bindEvents();
+      };
+    });
+
+    const am=document.getElementById('am');
+    if(am) am.onchange=e=>{
+      S.assMese=+e.target.value;
+      render();
+      bindEvents();
+    };
+
+    document.querySelectorAll('.assf').forEach(el=>{
+      el.onchange=async e=>{
+        const mk = `${S.assTeam}-${S.assMese}`;
+        const pid = e.target.dataset.pid;
+        const d = e.target.dataset.d;
+        let v = e.target.value;
+
+        S.assenze[mk] = S.assenze[mk] || {};
+        S.assenze[mk][pid] = S.assenze[mk][pid] || {};
+
+        if(v === 'UA'){
+          const ore = prompt('Quante ore di uscita anticipata?', '1');
+          if(ore === null || ore.trim() === ''){
+            e.target.value = '';
+            return;
+          }
+          v = `UA(${ore.trim()}h)`;
+        }
+
+        if(v === 'STR'){
+          const ore = prompt('Quante ore di straordinario?', '1');
+          if(ore === null || ore.trim() === ''){
+            e.target.value = '';
+            return;
+          }
+          v = `STR(${ore.trim()}h)`;
+        }
+
+        if(v === 'CL'){
+          v = 'CL';
+          S.assenze[mk][pid][`${d}_str`] = 'STR(8h)';
+        } else {
+          if(S.assenze[mk][pid][`${d}_str`]) delete S.assenze[mk][pid][`${d}_str`];
+        }
+
+        S.assenze[mk][pid][d] = v;
+
+        if(v === 'R'){
+          const teamPeople = getPeopleByTeam(S.assTeam);
+          teamPeople.forEach(p=>{
+            S.assenze[mk][p.id] = S.assenze[mk][p.id] || {};
+            S.assenze[mk][p.id][d] = v;
+          });
+        }
+
+        await apiSet(KEYS.assenze, S.assenze);
+        render();
+        bindEvents();
+      };
+    });
+  }
+
+if(S.tab==='shift'){
+  const stle=document.getElementById('stle');
+  if(stle)stle.oninput=function(e){S.shiftTlE=e.target.value;};
+
+  const sgen=document.getElementById('sgen');
+  if(sgen)sgen.oninput=function(e){S.shiftGen=e.target.value;};
+
+  const snc=document.getElementById('snc');
+  if(snc)snc.oninput=function(e){S.shiftNc=e.target.value;};
+
+  document.querySelectorAll('.snote').forEach(function(t){
+    t.oninput=function(e){S.shiftNotes[e.target.dataset.k]=e.target.value;};
+  });
+
+  const save=document.getElementById('shiftSave');
+  if(save)save.onclick=async function(){
+    if(!confirm('Vuoi archiviare questo Shift Report nello storico?')) return;
+
+    var team=S.planning&&S.planning.team||'A';
+    var turno=S.planning&&S.planning.turno||'';
+    var now=new Date();
+
+    var record={
+      data:now.toLocaleDateString('it-IT')+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
+      team:team,
+      turno:turno,
+      tlEntrante:S.shiftTlE||'—',
+      s1lw1:S.shiftNotes.s1lw1||'',
+      s1lw2:S.shiftNotes.s1lw2||'',
+      s1ww1:S.shiftNotes.s1ww1||'',
+      s1ww2:S.shiftNotes.s1ww2||'',
+      s2lw1:S.shiftNotes.s2lw1||'',
+      s2lw2:S.shiftNotes.s2lw2||'',
+      s2ww1:S.shiftNotes.s2ww1||'',
+      s2ww2:S.shiftNotes.s2ww2||'',
+      s3lw1:S.shiftNotes.s3lw1||'',
+      s3lw2:S.shiftNotes.s3lw2||'',
+      s3ww1:S.shiftNotes.s3ww1||'',
+      s3ww2:S.shiftNotes.s3ww2||'',
+      s4lw1:S.shiftNotes.s4lw1||'',
+      s4lw2:S.shiftNotes.s4lw2||'',
+      s4ww1:S.shiftNotes.s4ww1||'',
+      s4ww2:S.shiftNotes.s4ww2||'',
+      gen:S.shiftGen||'',
+      nc:S.shiftNc||''
+    };
+
+    if(!S.storicoShift)S.storicoShift=[];
+    S.storicoShift.push(record);
+    await apiSet(KEYS.storicoShift,S.storicoShift);
+
+    S.shiftTlE='';
+    S.shiftGen='';
+    S.shiftNc='';
+    S.shiftNotes={
+      s1lw1:'', s1lw2:'', s1ww1:'', s1ww2:'',
+      s2lw1:'', s2lw2:'', s2ww1:'', s2ww2:'',
+      s3lw1:'', s3lw2:'', s3ww1:'', s3ww2:'',
+      s4lw1:'', s4lw2:'', s4ww1:'', s4ww2:''
+    };
+
+    alert('✅ Shift archiviato nello Storico Shift');
+    render();
+    bindEvents();
+  };
+
+  const send=document.getElementById('sendTeams');
+  if(send)send.onclick=function(){
+    alert('Invio mail disattivato: il report viene archiviato nello Storico Shift con Salva.');
+  };
+}
+
+  if(S.tab==='storico'){
+    const sf=document.getElementById('sft');if(sf)sf.onchange=e=>{S.ft=e.target.value;render();};
+    const sproc=document.getElementById('sproc');if(sproc)sproc.onchange=e=>{S.fproc=e.target.value;render();};
+    const spala=document.getElementById('spala');if(spala)spala.onchange=e=>{S.fpala=e.target.value;render();};
+
+    const sc=document.getElementById('stclr');
+    if(sc)sc.onclick=async()=>{
+      if(confirm('Cancellare tutto lo storico?')){
+        S.storico=[];
+        await apiSet(KEYS.storico,[]);
+        render();
+        bindEvents();
+      }
+    };
+
+    document.querySelectorAll('.del-row').forEach(b=>b.onclick=async()=>{
+      const idx=+b.dataset.idx;
+      if(confirm('Cancellare questo record?')){
+        S.storico.splice(idx,1);
+        await apiSet(KEYS.storico,S.storico);
+        render();
+        bindEvents();
+      }
+    });
+  }
+
+  if(S.tab==='storshift'){
+    const sc=document.getElementById('sshclr');
+    if(sc)sc.onclick=async()=>{
+      if(confirm('Cancellare tutto lo storico shift?')){
+        S.storicoShift=[];
+        await apiSet(KEYS.storicoShift,[]);
+        render();
+        bindEvents();
+      }
+    };
+
+    document.querySelectorAll('.del-shift-row').forEach(b=>b.onclick=async()=>{
+      const idx=+b.dataset.idx;
+      if(confirm('Cancellare questo record shift?')){
+        S.storicoShift.splice(idx,1);
+        await apiSet(KEYS.storicoShift,S.storicoShift);
+        render();
+        bindEvents();
+      }
+    });
+  }
+}
+let _dataLoaded=false;
+async function loadData(){
+  if(_dataLoaded)return;
+  _dataLoaded=true;
+  S.loading=true;render();
+  S.personale=await apiGet(KEYS.personale)||mkPersonale();
+  S.oneOne = await apiGet(KEYS.oneone);
+  S.personale=S.personale.map(p=>({...p,training:p.training||[]}));
+  S.planning=await apiGet(KEYS.planning)||mkPlanning();
+  S.storico=await apiGet(KEYS.storico)||[];
+  S.assenze=await apiGet(KEYS.assenze)||{};
+  S.storicoShift=await apiGet(KEYS.storicoShift)||[];
+
+  const draft=await apiGet('shiftDraft');
+  if(draft){
+    S.shiftTlE=draft.tlEntrante||'';
+    S.shiftGen=draft.gen||'';
+    S.shiftNc=draft.nc||'';
+    S.shiftNotes=draft.shiftNotes||{};
+  }
+
+  S.loading=false;render();
+}
+
+(async function init(){
+  if(!getAuthUser()){S.loading=false;render();return;}
+  await loadData();
+})();
+</script>
+</body>
+</html>
